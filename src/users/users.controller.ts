@@ -1,15 +1,5 @@
-import {
-  Controller,
-  Post,
-  Body,
-  Get,
-  Param,
-  Query,
-  Delete,
-  Patch,
-  NotFoundException,
-  UseInterceptors
-} from "@nestjs/common"
+import { Controller, Post, Body, Get, Param, Query, Delete, Patch, NotFoundException } from "@nestjs/common"
+import { ApiResponse, ApiTags, ApiBody } from "@nestjs/swagger"
 import { CreateUserDto } from "./dtos/create-user.dto"
 import { UpdateUserDto } from "./dtos/update-user.dto"
 import { UsersService } from "./users.service"
@@ -18,9 +8,14 @@ import { UserDto } from "./dtos/user.dto"
 
 @Controller("auth")
 @Serialize(UserDto)
+@ApiTags("Users")
 export class UsersController {
   constructor(private usersService: UsersService) {}
   @Post("/signup")
+  @ApiBody({ description: "This is used to create a user", type: CreateUserDto })
+  @ApiResponse({ status: 201, description: "The record has been successfully created." })
+  @ApiResponse({ status: 403, description: "Forbidden." })
+  @ApiResponse({ status: 500, description: "Fatal error." })
   createUser(@Body() body: CreateUserDto) {
     this.usersService.create(body.email, body.password)
   }
