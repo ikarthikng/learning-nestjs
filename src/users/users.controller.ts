@@ -1,4 +1,16 @@
-import { Controller, Post, Body, Get, Param, Query, Delete, Patch, NotFoundException } from "@nestjs/common"
+import {
+  Controller,
+  Post,
+  Body,
+  Get,
+  Param,
+  Query,
+  Delete,
+  Patch,
+  NotFoundException,
+  Session,
+  UseGuards
+} from "@nestjs/common"
 import { ApiResponse, ApiTags, ApiBody } from "@nestjs/swagger"
 import { CreateUserDto } from "./dtos/create-user.dto"
 import { UpdateUserDto } from "./dtos/update-user.dto"
@@ -6,24 +18,43 @@ import { UsersService } from "./users.service"
 import { Serialize } from "../interceptors/serialize.interceptor"
 import { UserDto } from "./dtos/user.dto"
 import { AuthService } from "../auth/auth.service"
+import { CurrentUser } from "./decorators/current-user.decorator"
+import { User } from "./user.entity"
+import { AuthGuard } from "../guards/auth.guard"
 
 @Controller("auth")
 @Serialize(UserDto)
 @ApiTags("Users")
 export class UsersController {
   constructor(private usersService: UsersService, private authService: AuthService) {}
+
   @Post("/signup")
   @ApiBody({ description: "This is used to create a user", type: CreateUserDto })
   @ApiResponse({ status: 201, description: "The record has been successfully created." })
   @ApiResponse({ status: 403, description: "Forbidden." })
   @ApiResponse({ status: 500, description: "Fatal error." })
-  createUser(@Body() body: CreateUserDto) {
-    this.authService.signUp(body.email, body.password)
+  async createUser(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.signUp(body.email, body.password)
+    session.userId = user.id
+    return user
   }
 
   @Post("/signin")
-  signin(@Body() body: CreateUserDto) {
-    return this.authService.authenticateEmailandPassword(body.email, body.password)
+  async signin(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.authenticateEmailandPassword(body.email, body.password)
+    session.userId = user.id
+    return user
+  }
+
+  @Get("/whoami")
+  @UseGuards(AuthGuard)
+  whoAmI(@CurrentUser() user: User) {
+    return user
+  }
+
+  @Post("/signout")
+  signOut(@Session() session: any) {
+    session.userId = null
   }
 
   @Get("/:id")

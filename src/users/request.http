@@ -3,8 +3,8 @@ POST http://localhost:3000/auth/signup
 Content-Type: application/json
 
 {
-    "email": "testing.951@gmail.com",
-    "password": "aldfjasjkldfjs"
+    "email": "testing.952@gmail.com",
+    "password": "aldfjasjkldfjsaaa"
 }
 
 ### get an existing user
@@ -12,8 +12,8 @@ POST http://localhost:3000/auth/signin
 Content-Type: application/json
 
 {
-    "email": "testing.951@gmail.com",
-    "password": "aldfjasjkldfjs"
+    "email": "testing.952@gmail.com",
+    "password": "aldfjasjkldfjsaaa"
 }
 
 
@@ -36,3 +36,9 @@ Content-Type: application/json
 {
     "password": "38493jkaddsafsd"
 }
+
+### get currently signed in user
+GET http://localhost:3000/auth/whoami
+
+### sign out user
+POST http://localhost:3000/auth/signout
