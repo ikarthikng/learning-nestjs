@@ -1,0 +1,13 @@
+### create report
+POST http://localhost:3000/reports
+Content-Type: application/json
+
+{
+    "price": 26000,
+    "make": "Honda",
+    "model": "Accord",
+    "year": 2018,  
+    "lng": -97.2206902,
+    "lat": 32.8354778, 
+    "mileage": 5
+}
