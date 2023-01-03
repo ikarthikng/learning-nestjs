@@ -3,7 +3,7 @@ POST http://localhost:3000/reports
 Content-Type: application/json
 
 {
-    "price": 26000,
+    "price": 30000,
     "make": "Honda",
     "model": "Accord",
     "year": 2018,  
@@ -11,3 +11,15 @@ Content-Type: application/json
     "lat": 32.8354778, 
     "mileage": 5
 }
+
+
+### patch report
+PATCH http://localhost:3000/reports/1
+Content-Type: application/json
+
+{
+    "approved": true
+}
+
+### get estimate
+GET http://localhost:3000/reports?make=Honda&model=Accord&year=2018&lng=-97.2206902&lat=32.8354778&mileage=5
