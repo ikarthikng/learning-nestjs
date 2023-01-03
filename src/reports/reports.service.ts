@@ -27,7 +27,18 @@ export class ReportsService {
   }
 
   async getEstimate(query: GetEstimateDto) {
-    const report = await this.reportRepo.find({ where: query })
-    return report
+    return this.reportRepo
+      .createQueryBuilder()
+      .select("AVG(price)", "price")
+      .where("make = :make", { make: query.make })
+      .andWhere("model = :model", { model: query.model })
+      .andWhere("lng - :lng BETWEEN -5 and 5", { lng: query.lng })
+      .andWhere("lat - :lat BETWEEN -5 and 5", { lat: query.lat })
+      .andWhere("year - :year BETWEEN -3 and 3", { year: query.year })
+      .andWhere("approved IS TRUE")
+      .orderBy("ABS(mileage - :mileage)", "DESC")
+      .setParameters({ mileage: query.mileage })
+      .limit(3)
+      .getRawOne()
   }
 }
