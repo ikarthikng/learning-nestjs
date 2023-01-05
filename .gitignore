@@ -38,4 +38,4 @@ lerna-debug.log*
 .env.*
 
 # sqlite dbs
-*.db.sqlite
+*.sqlite
